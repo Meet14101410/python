@@ -1,0 +1,85 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+// Represents a point of interest
+public class PointOfInterest
+{
+    public string Name { get; set; }
+    public string Type { get; set; }
+    public string Description { get; set; }
+}
+
+// Manages information about Haridwar
+public class HaridwarInfoSystem
+{
+    private Dictionary<string, string> cityFacts;
+    private List<PointOfInterest> pointsOfInterest;
+
+    public HaridwarInfoSystem()
+    {
+        cityFacts = new Dictionary<string, string>
+        {
+            {"Location", "Uttarakhand, India"},
+            {"Population", "Approx. 230,000 (2023)"},
+            {"Known For", "Hindu pilgrimage site, Ganga Aarti, and temples"}
+        };
+
+        pointsOfInterest = new List<PointOfInterest>
+        {
+            new PointOfInterest { Name = "Har Ki Pauri", Type = "Ghat", Description = "The most sacred ghat in Haridwar, known for the evening Ganga Aarti." },
+            new PointOfInterest { Name = "Mansa Devi Temple", Type = "Religious Site", Description = "A popular temple on a hilltop, accessible by ropeway." },
+            new PointOfInterest { Name = "Chandi Devi Temple", Type = "Religious Site", Description = "Another hilltop temple dedicated to Goddess Chandi." }
+        };
+    }
+
+    public string GetCityFact(string factName)
+    {
+        if (cityFacts.ContainsKey(factName))
+        {
+            return $"{factName}: {cityFacts[factName]}";
+        }
+        else
+        {
+            return $"Fact not found: {factName}";
+        }
+    }
+
+    public List<PointOfInterest> SearchPointsOfInterest(string searchTerm)
+    {
+        string lowerSearchTerm = searchTerm.ToLower();
+        return pointsOfInterest.Where(poi => 
+            poi.Name.ToLower().Contains(lowerSearchTerm) || 
+            poi.Type.ToLower().Contains(lowerSearchTerm)
+        ).ToList();
+    }
+}
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        var infoSystem = new HaridwarInfoSystem();
+        
+        Console.WriteLine("City Facts");
+        Console.WriteLine(infoSystem.GetCityFact("Population"));
+        Console.WriteLine(infoSystem.GetCityFact("Known For"));
+
+        Console.WriteLine("\nSearching for 'Temple'");
+        var templeResults = infoSystem.SearchPointsOfInterest("Temple");
+        if (templeResults.Any())
+        {
+            foreach (var result in templeResults)
+            {
+                Console.WriteLine($"Name: {result.Name}");
+                Console.WriteLine($"Type: {result.Type}");
+                Console.WriteLine($"Description: {result.Description}");
+                Console.WriteLine("------------------------");
+            }
+        }
+        else
+        {
+            Console.WriteLine("No matching points of interest found.");
+        }
+    }
+}
