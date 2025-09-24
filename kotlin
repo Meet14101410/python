@@ -1,0 +1,54 @@
+data class PointOfInterest(
+    val name: String,
+    val type: String,
+    val description: String
+)
+
+class HaridwarInfoSystem {
+    private val cityFacts = mapOf(
+        "Location" to "Uttarakhand, India",
+        "Population" to "Approx. 230,000 (2023)",
+        "Known For" to "Hindu pilgrimage site, Ganga Aarti, and temples"
+    )
+
+    private val pointsOfInterest = listOf(
+        PointOfInterest("Har Ki Pauri", "Ghat", "The most sacred ghat in Haridwar, known for the evening Ganga Aarti."),
+        PointOfInterest("Mansa Devi Temple", "Religious Site", "A popular temple on a hilltop, accessible by ropeway."),
+        PointOfInterest("Chandi Devi Temple", "Religious Site", "Another hilltop temple dedicated to Goddess Chandi.")
+    )
+
+    fun getCityFact(factName: String): String {
+        return cityFacts[factName]?.let {
+            "$factName: $it"
+        } ?: "Fact not found: $factName"
+    }
+
+    fun searchPointsOfInterest(searchTerm: String): List<PointOfInterest> {
+        val lowerSearchTerm = searchTerm.lowercase()
+        return pointsOfInterest.filter {
+            it.name.lowercase().contains(lowerSearchTerm) ||
+            it.type.lowercase().contains(lowerSearchTerm)
+        }
+    }
+}
+
+fun main() {
+    val infoSystem = HaridwarInfoSystem()
+
+    println("City Facts")
+    println(infoSystem.getCityFact("Population"))
+    println(infoSystem.getCityFact("Known For"))
+
+    println("\nSearching for 'Temple'")
+    val templeResults = infoSystem.searchPointsOfInterest("Temple")
+    if (templeResults.isNotEmpty()) {
+        templeResults.forEach {
+            println("Name: ${it.name}")
+            println("Type: ${it.type}")
+            println("Description: ${it.description}")
+            println("------------------------")
+        }
+    } else {
+        println("No matching points of interest found.")
+    }
+}
